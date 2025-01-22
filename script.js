@@ -21,6 +21,97 @@ let forgotten_minios = [
   "Reaper.webp",
   "Site-logo.webp",
 ];
+const grave = {
+  'name' : 'Grave',
+  'rune1' : "Ice Runes",
+  'cost1' : 20,
+  'rune2' : "",
+  'cost2' : 0
+}
+
+const cupboard = {
+  'name' : 'Supply Cupboard',
+  'rune1' : 'Poison Runes',
+  'cost1' : 20,
+  'rune2' : "",
+  'cost2' : 0
+}
+const altar = {
+  'name' : 'Altar',
+  'rune1' : 'Blood Runes',
+  'cost1' : 20,
+  'rune2' : "",
+  'cost2' : 0
+}
+const foul_chicken = {
+  'name' : 'Foul Chicken',
+  'rune1' : "Poison Runes",
+  'cost1' : 15,
+  'rune2' : "Ice Runes",
+  'cost2' : 30
+}
+const lectern = {
+  'name' : 'Lectern',
+  'rune1' : "Moonlight Runes",
+  'cost1' : 20,
+  'rune2' : "Ice Runes",
+  'cost2' : 50
+}
+const frigde = {
+  'name' : 'Fridge',
+  'rune1' : "Moonlight Runes",
+  'cost1' : 20,
+  'rune2' : "Poison Runes",
+  'cost2' : 50
+}
+const portal = {
+  'name' : 'Portal',
+  'rune1' : "Blood Runes",
+  'cost1' : 30,
+  'rune2' : "Death Runes",
+  'cost2' : 30
+}
+const crashed_saucer = {
+  'name' : 'Crashed Saucer',
+  'rune1' : "Cosmic Runes",
+  'cost1' : 20,
+  'rune2' : "",
+  'cost2' : 0
+}
+const mana_pool = {
+  'name' : 'Mana Pool',
+  'rune1' : "Poison Runes",
+  'cost1' : 5,
+  'rune2' : "Ice Runes",
+  'cost2' : 10
+}
+const slime_vat = {
+  'name' : 'Slime Vat',
+  'rune1' : "Blood Runes",
+  'cost1' : 5,
+  'rune2' : "Poison Runes",
+  'cost2' : 10
+}
+const dark_stores = {
+  'name' : 'Dark Stores',
+  'rune1' : "Moonlight Runes",
+  'cost1' : 5,
+  'rune2' : "Blood Runes",
+  'cost2' : 10
+}
+const calc_table = {
+  '0' : grave,
+  '1' : cupboard,
+  '2' : altar,
+  '3' : foul_chicken,
+  '4' : lectern,
+  '5' : frigde,
+  '6' : portal,
+  '7' : crashed_saucer,
+  '8' : mana_pool,
+  '9' : slime_vat,
+  '10':dark_stores
+}
 
 function init() {
   RenderBuildings();
@@ -30,10 +121,10 @@ function init() {
 
 function RenderBuildings() {
   let buildingsRef = document.getElementById("buildings");
-
+  
   for (let index = 0; index < buildings.length; index++) {
     const building = buildings[index];
-
+    
     buildingsRef.innerHTML += `<button class=building onclick="selected_building(${index})">${build_imglink(
       building
     )}</button>`;
@@ -63,20 +154,23 @@ function calculate() {
   if (metricsRef.length !== 3) {
     console.log("Es fehlt noch etwas...");
   } else {
-    extract_data(metricsRef);    
-  }
-  // calc1 = pow(2, target - 1) * self.cost1 - pow(2, owned - 1) * self.cost1 if owned != 0 else pow(2, target - 1) * self.cost1
-  // calc2 = pow(2, target - 1) * self.cost2 - pow(2, owned - 1) * self.cost2 if owned != 0 else pow(2, target - 1) * self.cost2
-}
 
-// 'building' liest die zweite Stelle des jeweiligen Gebäude-Strings aus (alles davor ist die img-Declaration)
-// die beiden anderen Variablen überspringen den 'Level '-String und lesen die Nummer aus
-function extract_data(array) {
-  let building = array[0].innerHTML[17];
-  let wanted = array[1].innerHTML[6];
-  let owned = array[2].innerHTML[6];
-  console.log(building,wanted,owned);
-  
+    // 'building' liest die zweite Stelle des jeweiligen Gebäude-Strings aus (alles davor ist die img-Declaration)
+    // die beiden anderen Variablen überspringen den 'Level '-String und lesen die Nummer aus
+    let building = metricsRef[0].innerHTML[17];
+    let wanted = metricsRef[1].innerHTML[6];
+    let owned = metricsRef[2].innerHTML[6];
+    if (owned !== 0) {
+      calc1 = 2 ** wanted - 1 * calc_table[building].cost1 - 2 ** owned - 1 * calc_table[building].cost1;
+      calc2 = 2 ** wanted - 1 * calc_table[building].cost2 - 2 ** owned - 1 * calc_table[building].cost2;
+    } else {
+      calc1 = 2 ** wanted - 1 * building.cost1;
+      calc2 = 2 ** wanted - 1 * building.cost2;
+    }
+    document.getElementById('name').innerHTML = calc_table[building].name;
+    document.getElementById('rune1').innerHTML = `${calc_table[building].rune1}<br>${calc1}`;
+    document.getElementById('rune2').innerHTML = `${calc_table[building].rune2}<br>${calc2}`;
+  }
 }
 
 function selected_building(btn_num) {

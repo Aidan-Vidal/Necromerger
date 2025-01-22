@@ -5,7 +5,7 @@ body {
 header {
     display: flex;
     justify-content: center;
-    padding: 40px;
+    padding: 30px;
     background-color: rgb(44, 14, 82);
 }
 #buildings {
@@ -28,4 +28,9 @@ button:hover {
 }
 .selected {
     background-color: rgba(44, 14, 82, 0.6);
+}
+.results {
+    display: flex;
+    justify-content: center;
+    gap: 80px;
 }
