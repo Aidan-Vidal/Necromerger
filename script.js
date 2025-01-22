@@ -150,6 +150,9 @@ function RenderOwnedButtons() {
   }
 }
 function calculate() {
+  document.getElementById('name').innerHTML = "";
+  document.getElementById('rune1').innerHTML = "";
+  document.getElementById('rune2').innerHTML = "";
   let metricsRef = document.getElementsByClassName("selected");
   if (metricsRef.length !== 3) {
     console.log("Es fehlt noch etwas...");
@@ -160,16 +163,18 @@ function calculate() {
     let building = metricsRef[0].innerHTML[17];
     let wanted = metricsRef[1].innerHTML[6];
     let owned = metricsRef[2].innerHTML[6];
-    if (owned !== 0) {
-      calc1 = 2 ** wanted - 1 * calc_table[building].cost1 - 2 ** owned - 1 * calc_table[building].cost1;
-      calc2 = 2 ** wanted - 1 * calc_table[building].cost2 - 2 ** owned - 1 * calc_table[building].cost2;
+    if (owned != 0) {
+      calc1 = 2**(wanted-1)*calc_table[building].cost1-2**(owned-1)*calc_table[building].cost1;
+      calc2 = 2 ** (wanted - 1) * calc_table[building].cost2 - 2 ** (owned - 1) * calc_table[building].cost2;
     } else {
-      calc1 = 2 ** wanted - 1 * building.cost1;
-      calc2 = 2 ** wanted - 1 * building.cost2;
+      calc1 = 2 ** (wanted - 1) * calc_table[building].cost1;
+      calc2 = 2 ** (wanted - 1) * calc_table[building].cost2;
     }
     document.getElementById('name').innerHTML = calc_table[building].name;
     document.getElementById('rune1').innerHTML = `${calc_table[building].rune1}<br>${calc1}`;
-    document.getElementById('rune2').innerHTML = `${calc_table[building].rune2}<br>${calc2}`;
+    if (calc2 != 0) {
+      document.getElementById('rune2').innerHTML = `${calc_table[building].rune2}<br>${calc2}`;
+    }
   }
 }
 
@@ -199,3 +204,7 @@ function selected_owned_btn(btn_num) {
   }
   ownedRef[btn_num].classList.add("selected");
 }
+
+
+
+console.log(2**(4-1)*15-2**(2-1)*15)
